@@ -1,40 +1,49 @@
 package com.pjatk.movieservice.controller;
 
 import com.pjatk.movieservice.model.Movie;
-import com.pjatk.movieservice.service.MovieServiceService;
+import com.pjatk.movieservice.service.MovieService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
-@Controller
+@RestController
 @RequestMapping("/movies")
 public class MovieController {
+    private final MovieService movieService;
 
-    private final MovieServiceService movieServiceService;
-
-    public MovieController(MovieServiceService movieServiceService) {
-        this.movieServiceService = movieServiceService;
+    public MovieController(MovieService movieService) {
+        this.movieService = movieService;
     }
 
     @GetMapping
     public ResponseEntity<List<Movie>> readAllMovies() {
-        return ResponseEntity.ok(movieServiceService.readAll());
+        return ResponseEntity.ok(movieService.findAllMovies());
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<Movie> readMovie (@PathVariable int id) {
-        return ResponseEntity.ok(movieServiceService.readById(id));
+    ResponseEntity<Optional<Movie>> readMovie (@PathVariable Long id) {
+        return ResponseEntity.ok(movieService.findById(id));
     }
 
     @PostMapping
     ResponseEntity<Movie> createMovie (@RequestBody Movie movie) {
-        return ResponseEntity.ok(movieServiceService.createMovie(movie));
+        return ResponseEntity.ok(movieService.addMovie(movie));
     }
 
+    @DeleteMapping("/{id}")
+    ResponseEntity<Movie> deleteMovie (@PathVariable Long id) {
+         movieService.deleteById(id);
+         return ResponseEntity.noContent().build();
+
+    }
+
+
     @PutMapping("/{id}")
-    ResponseEntity<Movie> updateMovie (@PathVariable int id, @RequestBody Movie movie) {
+    ResponseEntity<Movie> updateMovie (@PathVariable Long id, @RequestBody Movie movie) {
+        movieService.updateById(id, movie);
+        return ResponseEntity.noContent().build();
 
     }
 

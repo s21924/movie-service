@@ -1,2 +1,5 @@
-package com.pjatk.movieservice.model;public class Category {
+package com.pjatk.movieservice.model;
+
+public enum Category {
+    horror, komedia, akcja, thriller, fantasy
 }
